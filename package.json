@@ -1,16 +1,22 @@
 {
   "name": "rb-rest-api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "author": "Marcos Corsi <marcosvcorsi@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js"
+  },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "pg-promise": "^10.9.2"
   },
   "devDependencies": {
     "axios": "^0.21.1",
-    "jest": "^26.6.3"
+    "jest": "^26.6.3",
+    "nodemon": "^2.0.7"
   },
   "type": "module"
 }
