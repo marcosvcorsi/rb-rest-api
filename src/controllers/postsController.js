@@ -1,7 +1,9 @@
-import { findAll } from '../services/postsService.js';
+import { createPostsService } from '../factories/posts.js';
+
+const postsService = createPostsService();
 
 const findAllPosts = async (req, res) => {
-  const posts = await findAll();
+  const posts = await postsService.findAll();
 
   res.json(posts);
 };
