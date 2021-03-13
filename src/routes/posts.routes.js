@@ -1,16 +1,18 @@
 import express from "express";
-import { createPost, deletePost, findAllPosts, findPostById, updatePost } from "../controllers/postsController.js";
+import { createPostsController } from "../factories/posts";
 
 const postsRoutes = express.Router();
 
-postsRoutes.get('/', findAllPosts);
+const postsController = createPostsController();
 
-postsRoutes.get('/:id', findPostById);
+postsRoutes.get('/', postsController.findAllPosts.bind(postsController));
 
-postsRoutes.post('/', createPost);
+postsRoutes.get('/:id', postsController.findPostById.bind(postsController));
 
-postsRoutes.put('/:id', updatePost);
+postsRoutes.post('/', postsController.createPost.bind(postsController));
 
-postsRoutes.delete('/:id', deletePost);
+postsRoutes.put('/:id', postsController.updatePost.bind(postsController));
+
+postsRoutes.delete('/:id', postsController.deletePost.bind(postsController));
 
 export default postsRoutes;

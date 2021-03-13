@@ -8,7 +8,7 @@ class PostsRepository {
   }
 
   async findById(id) {
-    return this.db.one('select * from blog.post where id = $1', [id]);
+    return this.db.oneOrNone('select * from blog.post where id = $1', [id]);
   }
 
   async create({ title, content }) {

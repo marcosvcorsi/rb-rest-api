@@ -59,6 +59,18 @@ describe('Posts', () => {
     expect(updatedPost.content).toBe(payload.content);
   })
 
+  it('should not update a post when id does not exists', async () => {
+    const payload = {
+      title: generate(),
+      content: generate()
+    }
+
+    const response = await request(app).put(`/posts/1`).send(payload);
+
+
+    expect(response.statusCode).toBe(404);
+  })
+
   it('should delete a post', async () => {
     const post = await postsService.create({
       title: generate(),

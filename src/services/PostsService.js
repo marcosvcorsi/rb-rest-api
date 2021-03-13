@@ -1,3 +1,5 @@
+import NotFoundError from "../errors/NotFoundError";
+
 class PostsService {
   constructor({ postsRepository }) {
     this.postsRepository = postsRepository;
@@ -8,7 +10,13 @@ class PostsService {
   }
 
   async findById(id) {
-    return this.postsRepository.findById(id);
+    const post = await this.postsRepository.findById(id);
+
+    if(!post) {
+      throw new NotFoundError('Post not found');
+    }
+
+    return post;
   }
 
   async create({ title, content }) {
@@ -16,10 +24,14 @@ class PostsService {
   }
 
   async update(id, { title, content }) {
+    await this.findById(id);
+
     return this.postsRepository.update(id, { title, content });
   }
 
   async delete(id) {
+    await this.findById(id);
+
     return this.postsRepository.delete(id);
   }
 }
