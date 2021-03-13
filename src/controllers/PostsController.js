@@ -1,5 +1,3 @@
-import NotFoundError from '../errors/NotFoundError.js';
-
 class PostsController {
   constructor({ postsService }) {
     this.postsService = postsService;
@@ -15,10 +13,6 @@ class PostsController {
     const { id } = request.params;
 
     const post = await this.postsService.findById(id);
-
-    if(!post) {
-      return response.status(404).json({ error: 'Post not found' });
-    }
 
     return response.json(post);
   }
@@ -37,18 +31,10 @@ class PostsController {
   async updatePost(request, response) {
     const { id } = request.params;
     const { title, content } = request.body;
-  
-    try {
-      await this.postsService.update(id, { title, content });
-  
-      return response.status(204).send();
-    } catch(error) {
-      if(error instanceof NotFoundError) {
-        return response.status(404).json({ error: error.message });
-      }
 
-      throw error;
-    }
+    await this.postsService.update(id, { title, content });
+
+    return response.status(204).send();
   }
 
   async deletePost(request, response) {

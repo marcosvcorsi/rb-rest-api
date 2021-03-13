@@ -1,4 +1,5 @@
 import NotFoundError from "../errors/NotFoundError";
+import AlreadyExistsError from '../errors/AlreadyExistsError';
 
 class PostsService {
   constructor({ postsRepository }) {
@@ -20,6 +21,12 @@ class PostsService {
   }
 
   async create({ title, content }) {
+    const postTitleAlreadyExists = await this.postsRepository.findByTitle(title);
+
+    if(postTitleAlreadyExists) {
+      throw new AlreadyExistsError('Post with this title already exists');
+    }
+
     return this.postsRepository.create({ title, content })
   }
 

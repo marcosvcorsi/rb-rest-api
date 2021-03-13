@@ -11,6 +11,10 @@ class PostsRepository {
     return this.db.oneOrNone('select * from blog.post where id = $1', [id]);
   }
 
+  async findByTitle(title) {
+    return this.db.oneOrNone('select * from blog.post where title = $1', [title]);
+  }
+
   async create({ title, content }) {
     return this.db.one('insert into blog.post (title, content) values ($1, $2) returning *', [title, content]);
   }

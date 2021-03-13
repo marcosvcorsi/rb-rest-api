@@ -26,6 +26,25 @@ describe('Posts', () => {
     expect(response.body[0].title).toBe(post.title);
   })
 
+  it('should get a post', async () => {
+    const post = await postsService.create({ title: generate(), content: generate() })
+
+    const response = await request(app).get(`/posts/${post.id}`);
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toHaveProperty('title')
+    expect(response.body).toHaveProperty('content');
+    expect(response.body.title).toBe(post.title);
+    expect(response.body.content).toBe(post.content);
+  })
+
+  it('should not get a post when id does not exists', async () => {
+    const response = await request(app).get(`/posts/1`);
+
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toHaveProperty('error')
+  })
+
   it('should create new post', async () => {
     const payload = {
       title: generate(),
@@ -37,6 +56,19 @@ describe('Posts', () => {
     expect(response.statusCode).toBe(201);
     expect(response.body).toBeTruthy();
     expect(response.body.title).toBe(payload.title);
+  })
+
+  it('should not create new post', async () => {
+    const payload = {
+      title: generate(),
+      content: generate()
+    }
+
+    await request(app).post('/posts').send(payload);
+    const response = await request(app).post('/posts').send(payload);
+
+    expect(response.statusCode).toBe(409);
+    expect(response.body).toHaveProperty('error');
   })
 
   it('should update a post', async () => {
@@ -67,8 +99,8 @@ describe('Posts', () => {
 
     const response = await request(app).put(`/posts/1`).send(payload);
 
-
     expect(response.statusCode).toBe(404);
+    expect(response.body).toHaveProperty('error');
   })
 
   it('should delete a post', async () => {
@@ -77,12 +109,18 @@ describe('Posts', () => {
       content: generate()
     });
 
-
     const response = await request(app).delete(`/posts/${post.id}`);
 
     const currentPosts = await postsService.findAll();
 
     expect(response.statusCode).toBe(204);
     expect(currentPosts).toHaveLength(0);
+  })
+
+  it('should not delete a post when id does not exists', async () => {
+    const response = await request(app).delete(`/posts/1`);
+
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toHaveProperty('error');
   })
 })
